@@ -19,7 +19,7 @@ RCN is a lot more neurally-grounded than neural networks, separating objects fro
 
 # Why not just use a GAN or a VAE?
 
-One slight nitpick: generative Adversarial Networks (GANs) and variational autoencoders (VAEs) are not actually neural networks. Rather, they are a framework for training generative models that are parameterized by some differentiable function, which may or may not be a neural network (if you do not believe me, try training a simple linear model using the mix-max game).
+One slight nitpick: Generative Adversarial Networks (GANs) and variational autoencoders (VAEs) are not actually neural networks. Rather, they are a framework for training generative models that are parameterized by some differentiable function, which may or may not be a neural network (if you do not believe me, try training a simple linear model using the mix-max game).
 
 Traditionally, deep generative models assume that the data has been holistically generated from noise that is sampled from a probability distribution. While this is good for density estimation, this assumption is not rich enough for the sort of tasks that the RCN is naturally able to handle. 
 
