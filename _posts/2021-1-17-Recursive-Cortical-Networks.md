@@ -74,7 +74,7 @@ Lateral connections play a big role in how the visual-cortex operates. And natur
 
 Once the latent variables have been learned through dictionary learning, the next step is to construct a graph that constrains the model. This is needed since the graph themselves do not add any randomness to the model, and thus any images sampled from the model won't have any variation. This randomness is acheived through something called a pooling layer, which stochastically shifts the activated features inside a certain radius. However, without any constrainment, the resulting image may have too much variation and not resemble the image that it is to model. Lateral connections prevent that from happening.
 
-Learning lateral connections is done by greedily adding pairwise edges between the features, starting from the closest to the longest. The resulting graph contains connections both short and long, and it should resemble the image that is being modelled:
+Learning lateral connections are constructed done by greedily adding pairwise edges between the features, starting from the closest to the longest. The resulting graph contains connections both short and long, and it should resemble the image that is being modelled:
 
 ![graph]({{ site.baseurl }}/images/2021-1-17/graph.png)
 
