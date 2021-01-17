@@ -23,7 +23,7 @@ One slight nitpick: Generative Adversarial Networks (GANs) and variational autoe
 
 Traditionally, deep generative models assume that the data has been holistically generated from noise that is sampled from a probability distribution. While this is good for density estimation, this assumption is not rich enough for the sort of tasks that the RCN is naturally able to handle. 
 
-Some deep generative models like VAEs come with an inference network as a byproduct of training, which can perform fast bottom up inference of the posterior distribution. However, under the Stochastic Gradient Variational Bayes framework, only a single query (for example, q(z|x)) can be solved through the training scheme. When another observed variable is used for querying, another network are required, which is unfeasable to train in practice. Unlike VAEs, RCN is able to perform classification, segmentation, imputation and generation all in the same model using [loopy belief-propagation](https://en.wikipedia.org/wiki/Belief_propagation).
+Some deep generative models like VAEs come with an inference network as a byproduct of training, which can perform fast bottom up inference of the posterior distribution. However, under the Stochastic Gradient Variational Bayes framework, only a single query can be solved through the training scheme. When another observed variable is used for querying, another network are required, which is unfeasable to train in practice. Unlike VAEs, RCN is able to perform classification, segmentation, imputation and generation all in the same model using [loopy belief-propagation](https://en.wikipedia.org/wiki/Belief_propagation).
 
 # Learning an RCN
 
