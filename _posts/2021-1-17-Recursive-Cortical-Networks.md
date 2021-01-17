@@ -93,9 +93,11 @@ In the forward pass, the input image is first passed through the Gabor filters. 
 In the backward pass, the cadidates that were selected in the forward pass will be refined through loopy belief propagation on the full graph. This time around, multiple iterations of loopy belief propagation is performed to explain away any conflicting variables. When the inference is complete, the backtraced latent variables (in the form of `(f, r, c`)) are decoded into the edge map, resulting in top down attention. It is at this stage that the RCN can explain away noisy and occluded images, such as the example below with an occluded "7":
 
 _Occluded image_
+
 ![occluded]({{ site.baseurl }}/images/2021-1-17/occluded.png)
 
 _Backtrace_
+
 ![backtrace]({{ site.baseurl }}/images/2021-1-17/backtrace.png)
 
 And that is inference in the RCN!
