@@ -21,7 +21,7 @@ RCN is a lot more neurally-grounded than neural networks, separating objects fro
 
 One slight nitpick: generative Adversarial Networks (GANs) and variational autoencoders (VAEs) are not actually neural networks. Rather, they are a framework for training generative models that are parameterized by some differentiable function, which may or may not be a neural network (if you do not believe me, try training a simple linear model using the mix-max game).
 
-Traditionally, neural network parameterized generative models assume that the data has been generated from noise that is sampled from a probability distribution. While this is good for density estimation, this assumption is not rich enough for the sort of tasks that the RCN is naturally able to handle. 
+Traditionally, deep generative models assume that the data has been holistically generated from noise that is sampled from a probability distribution. While this is good for density estimation, this assumption is not rich enough for the sort of tasks that the RCN is naturally able to handle. 
 
 Some deep generative models like VAEs come with an inference network as a byproduct of training, which can perform fast bottom up inference of the posterior distribution. However, under the Stochastic Gradient Variational Bayes framework, only a single query (for example, q(z|x)) can be solved through the training scheme. When another observed variable is used for querying, another network are required, which is unfeasable to train in practice. Unlike VAEs, RCN is able to perform classification, segmentation, imputation and generation all in the same model using [loopy belief-propagation](https://en.wikipedia.org/wiki/Belief_propagation).
 
@@ -79,3 +79,30 @@ Once the latent variables have been learned through dictionary learning, the nex
 Learning lateral connections is done by greedily adding pairwise edges between the features, starting from the closest to the longest. The resulting graph contains connections both short and long, and it should resemble the image that is being modelled:
 
 ![graph]({{ site.baseurl }}/images/2021-1-17/graph.png)
+
+Once the graph is learned, the learning step is complete. Now we can move on to the inference stage.
+
+# Inference in the RCN
+When performing inference, we are not just limited to classification. We can also perform generation (as it is a generative model), as well as segmentation through top down attention (which is acheived through explaining away and lateral connections). This makes it suitable for use in applications that require a flexible vision system, such as robotics. Inference in this model is a two step procedure, requiring both forward and backward passes.
+
+## Forward pass
+RCNs perform Bayesian inference, which is time and computation expensive. On loopy graphs, this is even harder since finding the exact marginal is impossible, and requires approximations to be made instead. Thankfully, message passing belief propagation allows for forward passes, and a good enough approximation can be found by using some neat tricks.
+
+In the forward pass, the input image is first passed through the Gabor filters. Afterwards, a graph cut is performed to turn the loopy graph into a tree. This allows for exact inference to be performed quite quickly through all of the graphs using the max-product algorithm. For general purpose use, this forward pass is all that is needed, but it has the tendencey to over-estimate the marginals and produce wrong assumptions. Therefore, the forward pass is used to select a set of candidate hypothesis (a group of high scoring graphs) that will be explained away in the backward pass.
+
+## Backward pass
+In the backward pass, the cadidates that were selected in the forward pass will be refined through loopy belief propagation on the full graph. This time around, multiple iterations of loopy belief propagation is performed to explain away any conflicting variables. When the inference is complete, the backtraced latent variables (in the form of `(f, r, c`)) are decoded into the edge map, resulting in top down attention. It is at this stage that the RCN can explain away noisy and occluded images, such as the example below with an occluded "7":
+
+_Occluded image_
+![occluded]({{ site.baseurl }}/images/2021-1-17/occluded.png)
+
+_Backtrace_
+![backtrace]({{ site.baseurl }}/images/2021-1-17/backtrace.png)
+
+And that is inference in the RCN!
+
+# That sounds cool! Why aren't we using it in practice?
+Long story short, RCNs also have drawbacks, some of which that deep learning does not have to deal with. As a probabilistic graphical model, a lot of prior knowledge is incorporated into this architecture, leading to design choices that do not necessarily work in the real world. At the moment, RCN only models shape; texture and colour have to be modelled separately using a [conditional random field](https://en.wikipedia.org/wiki/Conditional_random_field), for which bottom up inference is not yet available. Furthermore, RCNs require clean data samples, which is not readily available in the real world (neural networks bypass this by learning the average features of their training data). The pooling in the RCN also has some drawbacks in that it constraining it too much leads it to failing to recognize certain objects (for example, it is not able to recognize a chair that looks different from the one it has been trained on), and making it too flexible leads it to making wrong assumptions. Nonetheless, the work in this paper is a small step in making artificial intelligence models that can learn and generalize in the same way as humans.
+
+# Acknowledgements
+The images in this post were possible with the help of the [research paper](https://science.sciencemag.org/content/358/6368/eaag2612/tab-pdf), the [supplementary paper](https://science.sciencemag.org/content/suppl/2017/10/25/science.aag2612.DC1?_ga=2.200830954.556284175.1579971365-1421120347.1573528940), and the [reference implementation of the RCN](https://github.com/vicariousinc/science_rcn/).
