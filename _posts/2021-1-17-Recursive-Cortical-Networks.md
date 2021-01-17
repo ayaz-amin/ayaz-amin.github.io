@@ -38,6 +38,7 @@ In order to learn an RCN, the training image must be passed through an edge dete
 Unlike neural networks, RCNs do not learn through backpropagation. Instead, they learn using [dictionary learning](https://en.wikipedia.org/wiki/Dictionary_learning). This dictionary learning algorithm greedily sparsifies the edge-map by detecting edge activations and suppressing all other activations within a certain radius. The edge activations that are detected are then stored in a dictionary in the form of `(f, r, c)` tuples, with correspond to the feature index (edge orientation), row and column of the activated edge respectively. This dictionary makes up the latent variables of the RCN model, unlike randomly sampled noise that VAEs and GANs assume in their data-generating procedure. To better understand the algorithm, here is some code from the reference implementation (which I slightly modified code due to bugs) that highlights it into more detail:
 
     def sparsify(bu_msg, suppress_radius=3):
+        """    
         Make a sparse representation of the edges by greedily selecting features from the
         output of preprocessing layer and suppressing overlapping activations.
 

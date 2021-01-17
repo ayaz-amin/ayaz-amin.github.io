@@ -4,12 +4,13 @@ title: About
 permalink: /about/
 ---
 
-Some information about you!
+# Who am I?
+I am Ahmad Ayaz Amin, though I go by Ayaz. I am an 11th grade student from Toronto, and I like game development, machine learning and neuroscience.
 
 ### More Information
 
-A place to include any other types of information that you'd like to include about yourself.
+Yes.
 
 ### Contact me
 
-[email@domain.com](mailto:email@domain.com)
+[ayaza2004@@outlook.com](mailto:ayaza2004@@outlook.com)
