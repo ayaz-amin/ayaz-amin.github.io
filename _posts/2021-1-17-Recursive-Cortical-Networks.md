@@ -56,7 +56,7 @@ def sparsify(bu_msg, suppress_radius=3):
     -------
     frcs : see train_image.
     """
-    
+
     frcs = []
     img = bu_msg.max(0) > 0
     for (r, c), _ in np.ndenumerate(img):
@@ -110,3 +110,6 @@ Long story short, RCNs also have drawbacks, some of which that deep learning doe
 
 # Acknowledgements
 The images in this post were possible with the help of the [research paper](https://science.sciencemag.org/content/358/6368/eaag2612/tab-pdf), the [supplementary paper](https://science.sciencemag.org/content/suppl/2017/10/25/science.aag2612.DC1?_ga=2.200830954.556284175.1579971365-1421120347.1573528940), and the [reference implementation of the RCN](https://github.com/vicariousinc/science_rcn/).
+
+# Code for visualizations
+The code that I used to visualize the RCN model is located [here](https://github.com/ayaz-amin/recursive_cortical_network_visualizations)
