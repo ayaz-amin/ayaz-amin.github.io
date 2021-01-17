@@ -37,33 +37,31 @@ In order to learn an RCN, the training image must be passed through an edge dete
 ## Sparsification
 Unlike neural networks, RCNs do not learn through backpropagation. Instead, they learn using [dictionary learning](https://en.wikipedia.org/wiki/Dictionary_learning). This dictionary learning algorithm greedily sparsifies the edge-map by detecting edge activations and suppressing all other activations within a certain radius. The edge activations that are detected are then stored in a dictionary in the form of `(f, r, c)` tuples, with correspond to the feature index (edge orientation), row and column of the activated edge respectively. This dictionary makes up the latent variables of the RCN model, unlike randomly sampled noise that VAEs and GANs assume in their data-generating procedure. To better understand the algorithm, here is some code from the reference implementation (which I slightly modified code due to bugs) that highlights it into more detail:
 
-`
-def sparsify(bu_msg, suppress_radius=3):
-    """Make a sparse representation of the edges by greedily selecting features from the
-    output of preprocessing layer and suppressing overlapping activations.
+    def sparsify(bu_msg, suppress_radius=3):
+        Make a sparse representation of the edges by greedily selecting features from the
+        output of preprocessing layer and suppressing overlapping activations.
 
-    Parameters
-    ----------
-    bu_msg : 3D numpy.ndarray of float
-        The bottom-up messages from the preprocessing layer.
-        Shape is (num_feats, rows, cols)
-    suppress_radius : int
-        How many pixels in each direction we assume this filter
-        explains when included in the sparsification.
+        Parameters
+        ----------
+        bu_msg : 3D numpy.ndarray of float
+            The bottom-up messages from the preprocessing layer.
+            Shape is (num_feats, rows, cols)
+        suppress_radius : int
+            How many pixels in each direction we assume this filter
+            explains when included in the sparsification.
 
-    Returns
-    -------
-    frcs : see train_image.
-    """
-    frcs = []
-    img = bu_msg.max(0) > 0
-    for (r, c), _ in np.ndenumerate(img):
-        if img[r, c]:
-            frcs.append((bu_msg[:, r, c].argmax(), r, c))
-            img[r - suppress_radius:r + suppress_radius + 1, 
-                c - suppress_radius:c + suppress_radius + 1] = False
-    return np.array(frcs)
-`
+        Returns
+        -------
+        frcs : see train_image.
+        """
+        frcs = []
+        img = bu_msg.max(0) > 0
+        for (r, c), _ in np.ndenumerate(img):
+            if img[r, c]:
+                frcs.append((bu_msg[:, r, c].argmax(), r, c))
+                img[r - suppress_radius:r + suppress_radius + 1, 
+                    c - suppress_radius:c + suppress_radius + 1] = False
+        return np.array(frcs)
 
 When visualized, it results in a sparser edge map:
 
