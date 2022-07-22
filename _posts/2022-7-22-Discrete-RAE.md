@@ -1,6 +1,6 @@
 ---
 layout: post
-title: VAEs as Regularized Autoencoders: a Discrete Approach
+title: Discrete Regularized Autoencoders
 ---
  
 About a year ago, I read an interesting paper titled ["From Variational To Deterministic Autoencoders"](https://arxiv.org/abs/1903.12436) by Ghosh et al. It is a really interesting paper that I suggest others read, since it explores the variational autoencoder at a low level and derives fromt it a general class of generative models.
