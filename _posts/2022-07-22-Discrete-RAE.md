@@ -3,7 +3,7 @@ layout: post
 title: VAEs as Regularized Autoencoders: a Discrete Approach
 ---
  
-About a year ago, I read an interesting paper titled ("From Variational To Deterministic Autoencoders")[https://arxiv.org/abs/1903.12436] by Ghosh et al. It is a really interesting paper that I suggest others read, since it explores the variational autoencoder at a low level and derives fromt it a general class of generative models.
+About a year ago, I read an interesting paper titled ["From Variational To Deterministic Autoencoders"](https://arxiv.org/abs/1903.12436) by Ghosh et al. It is a really interesting paper that I suggest others read, since it explores the variational autoencoder at a low level and derives fromt it a general class of generative models.
 
 In short, I decided to explore the idea of VAEs as "autoencoders with latent and decoder regularization" and applied it to the discrete domain.
 
