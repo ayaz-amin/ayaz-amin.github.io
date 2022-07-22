@@ -11,7 +11,7 @@ Before delving into the findings and implications of my experiments, it would be
 
 # Regularized Autoencoder: Simple but Genius
 
-On the surface, variational autoencoders are utilize an autoencoder setup in the context of variational inference. 
+On the surface, variational autoencoders utilize an autoencoder setup in the context of variational inference. 
 
 From a probabilistic perspective, we have a generative model p(x, z) that produces data, and an inference model q(z|x) that infers latent variables by approximating the true posterior distribution p(z|x).
 
