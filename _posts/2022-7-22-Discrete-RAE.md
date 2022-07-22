@@ -32,4 +32,3 @@ The main takeaway here is that VAEs are a specific implementation of a regulariz
 The authors of the paper used regularized autoencoders in the continuous setting, but did not not explore them in the discrete domain. In this hobby project of mine, curiosity got the best of me and I uncovered some interesting properties of RAEs.
 
 # Discrete VAEs
-
