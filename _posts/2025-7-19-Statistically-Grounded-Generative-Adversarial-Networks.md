@@ -33,7 +33,7 @@ disc_fake_loss = F.binary_cross_entropy_with_logits(disc(x_fake.detach()), disc_
 disc_loss = disc_real_loss + disc_fake_loss
 ```
 
-This is not just a convenient trick — it's essential. Under this loss, the discriminator $D_\phi(x)$ approximates:
+This is not just a convenient trick — it's essential. Under this loss, the discriminator $$D_\phi(x)$$ approximates:
 
 $$D_\phi(x) \approx \ln \left( \frac{p_{data}(x)}{p_g(x)} \right)$$
 
@@ -49,17 +49,18 @@ This is the most straightforward loss, which can be implemented as:
 log_ratio = disc(x_fake).squeeze()
 gen_loss = -log_ratio.mean()
 ```
-This corresponds to minimizing the reverse KL divergence $D_{KL}(p_g(x)||p_{data}(x)) = \mathop{\mathbb{E}}_{p_g(x)}[\ln \left( \frac{p_g(x)}{p_{data}(x)} \right)]$
+This corresponds to minimizing the reverse KL divergence $$D_{KL}(p_g(x)||p_{data}(x)) = \mathop{\mathbb{E}}_{p_g(x)}[\ln \left( \frac{p_g(x)}{p_{data}(x)} \right)]$$
 
 This objective is mode-seeking, which is a property that often leads to sharp samples. But in practice, it doesn't necessarily suffer from mode collapse due to the entropy regularization term in the objective, which allows the generator maintains sufficient entropy.
 
-### Forward KL via Rényi $\alpha$-Divergence
-To train using forward KL — which is mode-covering — I approximated it using the Rényi $\alpha$-divergence, which allows expectations to remain under the generator distribution:
+### Forward KL via Rényi $$\alpha$$-Divergence
+To train using forward KL — which is mode-covering — I approximated it using the Rényi $$\alpha$$-divergence, which allows expectations to remain under the generator distribution:
+
 $$
 D_\alpha(p_g(x) || p_{data}(x)) = \frac{1}{(\alpha - 1)} \ln \left( \mathop{\mathbb{E}}_{p_g(x)}\left[\left( \frac{p_{data}(x)}{p_g(x)} \right)^\alpha\right] \right)
 $$
 
-Letting $\alpha → 1$ recovers the forward KL. In code, this becomes:
+Letting $$\alpha → 1$$ recovers the forward KL. In code, this becomes:
 
 ```python
 alpha = 0.999 # abritrarily close to 1
