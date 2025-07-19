@@ -51,7 +51,7 @@ gen_loss = -log_ratio.mean()
 ```
 This corresponds to minimizing the reverse KL divergence $$D_{KL}(p_g(x)||p_{data}(x)) = \mathop{\mathbb{E}}_{p_g(x)}[\ln \left( \frac{p_g(x)}{p_{data}(x)} \right)]$$
 
-This objective is mode-seeking, which is a property that often leads to sharp samples. But in practice, it doesn't necessarily suffer from mode collapse due to the entropy regularization term in the objective, which allows the generator maintains sufficient entropy.
+This objective is mode-seeking, which is a property that often leads to sharp samples. But in practice, it doesn't necessarily suffer from mode collapse due to the entropy regularization term in the objective, which allows the generator to generate sufficiently diverse samples.
 
 ### Forward KL via Rényi $$\alpha$$-Divergence
 To train using forward KL — which is mode-covering — I approximated it using the Rényi $$\alpha$$-divergence, which allows expectations to remain under the generator distribution:
@@ -69,7 +69,7 @@ gen_loss = (1 / (alpha - 1)) * (
 )
 ```
 
-The above implementation is a numerically stable equivalent of the expectation, letting us minimize a good enough estimate of the forward KL using samples from the generator.
+The above implementation is a numerically stable equivalent of the expectation, letting us minimize a good enough estimate of the forward KL using samples from the generator. The forward KL is particularly interesting since it is equivalent to maxmium likleihood, which is the objective for density estimators like variational autoencoders. Thus, a GAN trained with forward KL can also be thought of maximizing likleihood of data.
 
 ## Results and Reflections
 Here is the evolution of generator samples over the course of 100 iterations. The models were trained on the CIFAR-10 dataset: 
