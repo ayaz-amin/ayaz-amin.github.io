@@ -69,10 +69,10 @@ gen_loss = (1 / (alpha - 1)) * (
 )
 ```
 
-The above implementation is a numerically stable equivalent of the expectation, letting us minimize a good enough estimate of the forward KL using samples from the generator. The forward KL is particularly interesting since it is equivalent to maxmium likleihood, which is the objective for density estimators like variational autoencoders. Thus, a GAN trained with forward KL can also be thought of maximizing likleihood of data.
+The above implementation is a numerically stable equivalent of the expectation, letting us minimize a good enough estimate of the forward KL using samples from the generator. The forward KL is particularly interesting since it is equivalent to maxmium likleihood, which is the objective for density estimators like variational autoencoders. Thus, a GAN trained with forward KL can also be thought of as maximizing likleihood of data.
 
 ## Results and Reflections
-Here is the evolution of generator samples over the course of 100 iterations. The models were trained on the CIFAR-10 dataset: 
+Here are the evolution of generator samples over the course of 100 iterations. The models were trained on the CIFAR-10 dataset using the same architecture and hyperparameters for each: 
 <div style="display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap;">
   <figure style="flex: 1; text-align: center; min-width: 300px;">
     <img src="{{ site.baseurl }}/images/2025-7-19/training_progress_rkl.gif" alt="GIF 1" style="max-width: 100%; height: auto;">
