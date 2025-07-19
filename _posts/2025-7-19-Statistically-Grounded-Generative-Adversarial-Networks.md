@@ -93,7 +93,7 @@ Both losses — reverse KL and Rényi $$\alpha → 0$$ — gave me:
 - Sharp and diverse samples
 - No noticeable mode collapse (even under reverse KL)
 
-Just by looking at the samples, it seems that the presence of entropy in reverse KL doesn't really encourage sample diversity, although a proper log likelihood estimate would be needed in order to quantify this — perhaps by training both generators with normalizing flows.
+Just by looking at the samples, it seems that the presence of entropy in reverse KL doesn't really encourage greater sample diversity compared to the $$\alpha → 0$$ divergence, although a proper log likelihood estimate would be needed in order to quantify this — perhaps by training both generators with normalizing flows.
 
 What stood out most was the clarity and stability this perspective gave me. I wasn't playing with any heuristics, but optimizing well-defined divergences with known statistical meaning.
 
