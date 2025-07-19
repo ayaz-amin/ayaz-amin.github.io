@@ -53,14 +53,14 @@ This corresponds to minimizing the reverse KL divergence $$D_{KL}(p_g(x)||p_{dat
 
 This objective is mode-seeking, which is a property that often leads to sharp samples. But in practice, it doesn't necessarily suffer from mode collapse due to the entropy regularization term in the objective, which allows the generator to generate sufficiently diverse samples.
 
-### Forward KL via Rényi $$\alpha$$-Divergence
-To train using forward KL — which is mode-covering — I approximated it using the Rényi $$\alpha$$-divergence, which allows expectations to remain under the generator distribution:
+### Rényi $$\alpha$$-Divergence
+Reverse KL — which is mode seeking — is a limiting case of the Rényi $$\alpha$$-divergence when $$\alpha -> 1$$. The divergence takes the following form:
 
 $$
 D_\alpha(p_g(x) || p_{data}(x)) = \frac{1}{(\alpha - 1)} \ln \left( \mathop{\mathbb{E}}_{p_g(x)}\left[\left( \frac{p_g(x)}{p_{data}(x)} \right)^{\alpha - 1}\right] \right)
 $$
 
-Letting $$\alpha → 0$$ recovers the forward KL. In code, this becomes:
+Letting $$\alpha → 0$$ recovers an even more mode seeking objective, while increasing the value of $$\alpha$$ makes the divergence more mode covering. In code, the $$\alpha$$-divergence takes the form:
 
 ```python
 alpha = 0.001 # abritrarily close to 0
@@ -69,27 +69,31 @@ gen_loss = (1 / (alpha - 1)) * (
 )
 ```
 
-The above implementation is a numerically stable equivalent of the expectation, letting us minimize a good enough estimate of the forward KL using samples from the generator. The forward KL is particularly interesting since it is equivalent to maxmium likleihood, which is the objective for density estimators like variational autoencoders. Thus, a GAN trained with forward KL can also be thought of as maximizing likleihood of data.
+The above implementation is a numerically stable equivalent of the expectation, letting us minimize a good enough estimate of the divergence using samples from the generator.
+
+### Forward KL
+
+Interestingly, we do also have the option to minimize the *forward KL* divergence, despite being an expectation under the true data density rather than the model density as is the case for the GAN objective. To do so, we need to reweight the log density ratio estimate as output by the discriminator by $$\frac{p_{data}(x)}{p_g(x)}$$ (i.e. the exponential of the discriminator output), which changes the density under which the expectation is taken. The forward KL is particularly interesting since it is equivalent to maxmium likleihood, which is the objective for density estimators like variational autoencoders. Thus, a GAN trained with forward KL can also be thought of as maximizing likleihood of data. Unfortunately, training with forward KL tends to collapse on random noise, which I suppose is the optimal solution as far as maximum likelihood estimation is concerned; especially since the generator has a degenerate structure. The reverse KL divergence and mode seeking $$\alpha$$-divergences give the best results, at least as far as the network parameterization goes.
 
 ## Results and Reflections
 Here are the evolution of generator samples over the course of 100 iterations. The models were trained on the CIFAR-10 dataset using the same architecture and hyperparameters for each: 
 <div style="display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap;">
   <figure style="flex: 1; text-align: center; min-width: 300px;">
     <img src="{{ site.baseurl }}/images/2025-7-19/training_progress_rkl.gif" alt="GIF 1" style="max-width: 100%; height: auto;">
-    <figcaption>Reverse KL GAN</figcaption>
+    <figcaption>Reverse KL</figcaption>
   </figure>
   <figure style="flex: 1; text-align: center; min-width: 300px;">
-    <img src="{{ site.baseurl }}/images/2025-7-19/training_progress_fkl.gif" alt="GIF 2" style="max-width: 100%; height: auto;">
-    <figcaption>Forward KL GAN</figcaption>
+    <img src="{{ site.baseurl }}/images/2025-7-19/training_progress_alpha0.gif" alt="GIF 2" style="max-width: 100%; height: auto;">
+    <figcaption>Rényi \alpha -> 0</figcaption>
   </figure>
 </div>
 
-Both losses — reverse KL and forward KL (via Rényi) — gave me:
+Both losses — reverse KL and Rényi $$\alpha -> 0$$ — gave me:
 - Stable training
 - Sharp and diverse samples
 - No noticeable mode collapse (even under reverse KL)
 
-This matched my theoretical expectation (and also the results in Poole et al. 2016): the presence of entropy (even implicit via stochastic generation) plays a major role in preserving sample diversity, regardless of the divergence direction.
+Just by looking at the samples, it seems that the presence of entropy in reverse KL doesn't really encourage sample diversity, although a proper log likelihood estimate would be needed in order to quantify this — perhaps by training both generators with normalizing flows.
 
 What stood out most was the clarity and stability this perspective gave me. I wasn't playing with any heuristics, but optimizing well-defined divergences with known statistical meaning.
 
