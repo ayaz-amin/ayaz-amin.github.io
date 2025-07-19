@@ -57,7 +57,7 @@ This objective is mode-seeking, which is a property that often leads to sharp sa
 To train using forward KL — which is mode-covering — I approximated it using the Rényi $$\alpha$$-divergence, which allows expectations to remain under the generator distribution:
 
 $$
-D_\alpha(p_g(x) || p_{data}(x)) = \frac{1}{(\alpha - 1)} \ln \left( \mathop{\mathbb{E}}_{p_g(x)}\left[\left( \frac{p_g(x)}{p_{data}(x)} \right)^(\alpha - 1)\right] \right)
+D_\alpha(p_g(x) || p_{data}(x)) = \frac{1}{(\alpha - 1)} \ln \left( \mathop{\mathbb{E}}_{p_g(x)}\left[\left( \frac{p_g(x)}{p_{data}(x)} \right)^{\alpha - 1}\right] \right)
 $$
 
 Letting $$\alpha → 0$$ recovers the forward KL. In code, this becomes:
