@@ -33,9 +33,9 @@ disc_fake_loss = F.binary_cross_entropy_with_logits(disc(x_fake.detach()), disc_
 disc_loss = disc_real_loss + disc_fake_loss
 ```
 
-This is not just a convenient trick — it's essential. Under this loss, the discriminator $D_\phi(x)$ approximates:
+This is not just a convenient trick — it's essential. Under this loss, the discriminator {% latex %} D_\phi(x) {% endlatex %} approximates:
 
-$$D_\phi(x) \approx \ln \left( \frac{p_{data}(x)}{p_g(x)} \right)$$
+{% latex centered %} D_\phi(x) \approx \ln \left( \frac{p_{data}(x)}{p_g(x)} \right) {% endlatex %}
 
 That is, the log-density ratio between real and generated data. The density ratio appears in the optimal discriminator in standard GAN theory, and is a key ingredient in many f-divergences. Estimating it directly enables flexible generator objectives rooted in statistical inference. This subtle detail — using logits directly — turns the discriminator from a classifier into a density ratio estimator, making it a meaningful statistical object.
 
@@ -49,17 +49,16 @@ This is the most straightforward loss, which can be implemented as:
 log_ratio = disc(x_fake).squeeze()
 gen_loss = -log_ratio.mean()
 ```
-This corresponds to minimizing the reverse KL divergence $D_{KL}(p_g(x)||p_{data}(x)) = \mathop{\mathbb{E}}_{p_g(x)}[\ln \left( \frac{p_g(x)}{p_{data}(x)} \right)]$
+This corresponds to minimizing the reverse KL divergence {% latex %} D_{KL}(p_g(x)||p_{data}(x)) = \mathop{\mathbb{E}}_{p_g(x)}[\ln \left( \frac{p_g(x)}{p_{data}(x)} \right)] {% endlatex %}.
 
 This objective is mode-seeking, which is a property that often leads to sharp samples. But in practice, it doesn't necessarily suffer from mode collapse due to the entropy regularization term in the objective, which allows the generator maintains sufficient entropy.
 
-### Forward KL via Rényi $\alpha$-Divergence
-To train using forward KL — which is mode-covering — I approximated it using the Rényi $\alpha$-divergence, which allows expectations to remain under the generator distribution:
-$$
-D_\alpha(p_g(x) || p_{data}(x)) = \frac{1}{(\alpha - 1)} \ln \left( \mathop{\mathbb{E}}_{p_g(x)}\left[\left( \frac{p_{data}(x)}{p_g(x)} \right)^\alpha\right] \right)
-$$
+### Forward KL via Rényi {% latex %} \alpha {% endlatex %}-Divergence
+To train using forward KL — which is mode-covering — I approximated it using the Rényi {% latex %} \alpha {% endlatex %}-divergence, which allows expectations to remain under the generator distribution:
 
-Letting $\alpha → 1$ recovers the forward KL. In code, this becomes:
+{% latex centered %} D_\alpha(p_g(x) || p_{data}(x)) = \frac{1}{(\alpha - 1)} \ln \left( \mathop{\mathbb{E}}_{p_g(x)}\left[\left( \frac{p_{data}(x)}{p_g(x)} \right)^\alpha\right] \right) {% endlatex %}
+
+Letting {% latex %} \alpha → 1 {% endlatex %} recovers the forward KL. In code, this becomes:
 
 ```python
 alpha = 0.999 # abritrarily close to 1
