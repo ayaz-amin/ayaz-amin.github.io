@@ -88,7 +88,7 @@ Here are the evolution of generator samples over the course of 100 iterations. T
   </figure>
 </div>
 
-Both losses — reverse KL and Rényi $$\alpha -> 0$$ — gave me:
+Both losses — reverse KL and Rényi $$\alpha → 0$$ — gave me:
 - Stable training
 - Sharp and diverse samples
 - No noticeable mode collapse (even under reverse KL)
@@ -103,8 +103,8 @@ This first GAN project was deeply satisfying — not because it broke new ground
 Key takeaways:
 - GANs can be trained using statistically meaningful divergences, not just heuristic losses.
 - The discriminator should be interpreted as a density ratio estimator, not just a classifier.
-- Approximating forward KL with Rényi divergence lets you retain a generator-side expectation.
-- Reverse KL — when paired with a sufficiently stochastic generator — can be stable and performant.
+- Approximating forward KL with density ratio rescaling divergence lets you retain a generator-side expectation (though I wouldn't recommend it!).
+- Mode seeking divergences can be stable and performant; provided it is a proper divergence.
 
 Importantly, by reframing GAN training through this statistical lens, not only can I reason about this class of models with clarity, but the implementation is actually a lot simpler and (at least in my experiments) more stable. GANs, when framed this way, feel less like unstable black-box tools and more like variational inference algorithms in disguise.
 
